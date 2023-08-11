@@ -18,6 +18,6 @@ public interface CoreDao<P, I> {
 	List<P> selectAll();
 	
 	default Session getSession() {
-			return getSessionFactory().getCurrentSession();
+			return getSessionFactory().openSession();
 	}
 }

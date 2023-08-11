@@ -1,11 +1,5 @@
 package web.member.dao.impl;
 
-import static core.util.CommonUtil.getConnection;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,7 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import web.member.dao.MemberDao;
-import web.member.pojo.Member;
+import web.member.entity.Member;
 
 public class MemberDaoImpl implements MemberDao {
 
@@ -41,8 +35,13 @@ public class MemberDaoImpl implements MemberDao {
 		if (password != null && !password.isEmpty()) {
 			hql.append("password = :password,");
 		}
-		hql.append("nickname = :nickname,").append("pass = :pass,").append("roleId = :roleId,")
-				.append("update = :updater,").append("lastupdateDate = NOW() ").append("WHERE username = :username");
+		hql
+			.append("nickname = :nickname,")
+			.append("pass = :pass,")
+			.append("roleId = :roleId,")
+			.append("updater = :updater,")
+			.append("lastUpdatedDate = NOW() ")
+			.append("WHERE username = :username");
 
 		Query<?> query = getSession().createQuery(hql.toString());
 		if (password != null && !password.isEmpty()) {
@@ -72,14 +71,14 @@ public class MemberDaoImpl implements MemberDao {
 		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
 		Root<Member> root = criteriaQuery.from(Member.class);
-		criteriaQuery.where(criteriaBuilder.equal(root.get("username", username)));
+		criteriaQuery.where(criteriaBuilder.equal(root.get("username"), username));
 		return session.createQuery(criteriaQuery).uniqueResult();
 	}
 
 	@Override
 	public Member selectForLogin(String username, String password) {
-		final String sql = "select * from MEMBER where USERNAME = ? and PASSWORD = ?";
-		return getSession().createNativeQuery(sql, Member.class).setParameter("username", username)
-				.setParameter("password", password).uniqueResult();
+		final String sql = "select * from MEMBER where USERNAME = :xxx and PASSWORD = :yyy";
+		return getSession().createNativeQuery(sql, Member.class).setParameter("xxx", username)
+				.setParameter("yyy", password).uniqueResult();
 	}
 }
