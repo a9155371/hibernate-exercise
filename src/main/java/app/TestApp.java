@@ -3,8 +3,15 @@ package app;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 //import javax.persistence.criteria.CriteriaBuilder;
 //import javax.persistence.criteria.CriteriaQuery;
 //import javax.persistence.criteria.Root;
@@ -17,106 +24,25 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 //import web.emp.entity.Emp;
 //import web.emp.util.HibernateUtil;
 //import web.member.entity.Member;
+import org.springframework.context.support.GenericApplicationContext;
 
 import web.member.dao.MemberDao;
 import web.member.entity.Member;
 
 public class TestApp {
 
-	public static void main(String[] args) {
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+	public static void main(String args[]) {
+		GenericApplicationContext applicationContext = new GenericApplicationContext();
+		new XmlBeanDefinitionReader(applicationContext).loadBeanDefinitions("applicationContext.xml");
+		applicationContext.refresh();
+		
 		MemberDao memberDao = applicationContext.getBean(MemberDao.class);
+		System.out.println(memberDao.selectById(1).getNickname());
 		
-		for(Member member : memberDao.selectAll()) {
-			System.out.println(member.getNickname());
-		}
-		
-		
-		
+//		((ConfigurableApplicationContext) applicationContext).close();
+//		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 //		Session session = sessionFactory.openSession();
